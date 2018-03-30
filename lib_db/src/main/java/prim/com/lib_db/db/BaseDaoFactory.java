@@ -39,20 +39,22 @@ public class BaseDaoFactory {
 
     /**
      * 生产basedao 对象
+     *
      * @param entityClass
-     * @param <T>
+     * @param <T>         User 对象
+     * @param <M>         BaseDao {@link BaseDao}
      * @return
      */
-    public <T> BaseDao<T> getBaseDao(Class<T> entityClass) {
+    public synchronized <M extends BaseDao<T>, T> M getBaseDao(Class<M> daoClass, Class<T> entityClass) {
         BaseDao baseDao = null;
         try {
-            baseDao = BaseDao.class.newInstance();
+            baseDao = daoClass.newInstance();
             baseDao.init(sqLiteDatabase, entityClass);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return baseDao;
+        return (M) baseDao;
     }
 }

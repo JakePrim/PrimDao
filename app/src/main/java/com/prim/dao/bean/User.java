@@ -11,9 +11,18 @@ import prim.com.lib_db.annotation.DbTable;
 @DbTable("tb_user")
 public class User {
     @DbField("_id")
-    public int id;
+    public Integer id;
     public String name;
 
     @DbField("u_pass")
     public String pass;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", pass='" + pass + '\'' +
+                '}';
+    }
 }
