@@ -36,7 +36,7 @@ public class BaseDao<T> implements IBaseDao<T> {
     private static final String TAG = "BaseDao";
 
     //建表
-    protected boolean init(SQLiteDatabase sqLiteDatabase, Class<T> entityClass) {
+    public boolean init(SQLiteDatabase sqLiteDatabase, Class<T> entityClass) {
         this.sqLiteDatabase = sqLiteDatabase;
         this.entityClass = entityClass;
         //1 获取表名

@@ -4,6 +4,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.util.Log;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by suful on 2018/3/24.
  */
@@ -27,7 +31,12 @@ public class BaseDaoFactory {
 
     private String dbPath;
 
-    private BaseDaoFactory() {
+    // 设计数据库的连接池
+    protected Map<String, BaseDao> map = Collections.synchronizedMap(new HashMap<String, BaseDao>());
+
+
+
+    protected BaseDaoFactory() {
         // 可以先判断有没有Sd 卡
 
         // 写到项目中
@@ -47,9 +56,13 @@ public class BaseDaoFactory {
      */
     public synchronized <M extends BaseDao<T>, T> M getBaseDao(Class<M> daoClass, Class<T> entityClass) {
         BaseDao baseDao = null;
+        if (map.get(daoClass.getSimpleName()) != null) {
+            return (M) map.get(daoClass.getSimpleName());
+        }
         try {
             baseDao = daoClass.newInstance();
             baseDao.init(sqLiteDatabase, entityClass);
+            map.put(daoClass.getSimpleName(), baseDao);
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
